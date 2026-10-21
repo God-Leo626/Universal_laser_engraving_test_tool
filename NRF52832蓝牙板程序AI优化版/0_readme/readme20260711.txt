@@ -1,0 +1,143 @@
+[1]本程序使用的硬件是NRF52832 XXAA
+
+[2]本程序使用的SDK版本为 nRF5_SDK_15.2.0_9412b96
+
+[3]芯片 rom = 512k (0X8000 0000 ---------0X8008 0000 )， ram= 64k (0X2000 0000 ------ 0X2001 0000 )
+
+[4]蓝牙协议栈版本= s132_nrf52_6.1.0_softdevice  , 官方规定大小 = 152k
+
+[5] BLE 协议栈空间 KEIL MDK设置     IROM1 = 0x0000 0000   ------大小：   0x26000
+
+[6] BLE 协议栈空间 KEIL MDK设置     IRAM1 = 0X2000 0000   ------大小 ：  0X2218
+
+
+[7] APP空间  KEIL MDK设置            IROM1 = 0X26000       ------大小 ：  0X5A000  
+
+[8] APP空间  KEIL MDK设置            IRAM1 = 0X2000 2218   ------大小 ：  0XDDE8
+
+[9]  下载程序时， 要先下载ble协议栈程序，后下载应用程序
+
+[10] 在 keil mdk中下载协议栈时，要按照【5】【6】设置空间，且flash download设置中，设置为 erase full chip
+
+[11] 在keil mdk中下载协议栈时，要按照 【7】【8】设置空间，且flash download设置中，设置为 erase sectors
+
+[12] 程序在上电复位后，才允许设置相关的命令，运行后要想在设置，需要从启后再进行设置
+
+[13] 命令必须以回车换行结束
+
+    1 ---> [ rssi_set=-xx\\r\\n               ] --- < set rssi command           >\r\n");  //  设置RSSI 过滤
+    2 ---> [ feature_value_set=0x020105\\r\\n ] --- < set feature_value command  >\r\n");  // 设置特征值过滤
+    3 ---> [ start_scanning\\r\\n             ] --- < set start_scanning command >\r\n");  // 设置开始扫描
+    4 ---> [ byte_order_set\\r\\n             ] --- < byte_order_set command     >\r\n");  // 设置mac 显示字节徐
+    5 ---> [ use_default_settings\\r\\n       ] --- < default_setting command    >\r\n");  // 设置默认方式开始扫描 -60， 无特征过滤
+    6 ---> [ mask_raw_data\\r\\n              ] --- < mask_raw_data command      >\r\n");  // 显示原始数据
+	7 ---> [ decoding_setting\r\n             ] --- < set decoding mode          >\r\n");  // 解析方式， 默认xor解析数据 ，发送后明文解析数据
+	
+
+
+    A: 当想使用默认配置扫描并接受广播时，使用 use_default_settings\r\n 命令接口，发送后，程序开始自动扫描并接受广播，
+	   并通过串口打印信息，此时的过滤rssi阈值 =  -60
+	
+	B: 当想使用默认配置，但是想修改RSSI阈值，显发送rssi_set=-xx ，修改阈值， 然后发送se_default_settings\r\n，发送后，
+	   程序开始自动扫描并接受广播，并通过串口打印信息，此时的过滤rssi阈值 =  -xx（自定义值）
+	   
+	   当想使用默认方式接收数据时，可以设置rssi，设置解密方式，最后发送use_default_settings\r\n 
+	   按照rssi过滤数据，原始数据，设置的解密方式的数据，默认mac 的字节序
+	   不能设置特征值过滤
+	   
+	   发送 rssi_set=-38
+	   发送 decoding_setting （发一次）
+	   发送 use_default_settings 
+	   开始接收显示数据， 按照rssi = -38过滤数据，原始数据 + 按照 明文解析数据，默认mac字节序的数据
+	   例如： 
+	   [RSSI=-36] ---> [CH=37] ---> [tx_pwr=127] ---> [MAC=0XCE 7A A8 75 54 DC ] ---> [DATA=0X02 01 05 1B FF CA 0A FE B0 3F 81 45 66 46 37 47 43 05 E2 95 58 63 0E BF 03 45 4E EA E3 EC EB ]
+       [DECRYPT_MAC]=B03F8145664637474305E29558630EBF ---> [DECRYPT_SN]=03454EEAE3ECEB
+	
+	C: 当想自定义特征值 + rssi阈值时， 要使用1 + 2 + 3 命令来设置，发送后，程序开始按照设置的特征值 +rssi阈值过滤数据
+	   并通过串口发送
+	
+	D: 默认串口是不输出扫描到的原始数据的，只输出解析后的mac + sn
+	
+	E : 如果想要看到扫描到的原始数据，需要发送mask_raw_data\r\n 打开原始数据的串口输出
+	
+
+
+[14] 程序中的全局变量说明
+    【uarte_52832_dma.c文件中】
+	
+     A : start_advertising_flag ;             //  开始广播的标志， true = 开始扫描， 否则不扫描
+	 B : bool rssi_change_result  ;           //  rssi设置结果   true 设置成功
+	 C : bool byte_order_flag  ;              //  字节序是否逆序输出标志  false = 默认顺序， true= 逆序
+	 D : long rssi_buf  ;                     //  保存设置的rssi值
+	 E : bool run_flag_b  ;                   //  保存使用默认配置开始扫描时候的标志 ，true = 使用默认设置    false= 自定义设置
+	 F : bool  mask_raw_data_global_flag  ;   //  屏蔽扫描接收到的原始数据（ture = 原始数据不通过串口显示  false= 显示原始数据）
+	 
+	 
+	【ble_app.c文件中        】
+	 
+	 G : bool run_flag_a  ;                   //  是否运行开始扫描广播数据的标志位，  true = 运行， false = 不运行  
+	 
+	【data_processing.c文件中】
+	 
+	 H : feature_raw[32];                     // 用于保存在feature_set 函数中转换号的十六进制值
+     I : feature_raw_len ;                    // 用于保存在feature_set 函数中转换号的十六进制的个数
+     J : feature_global_flag  ;                 //  用于保存 feature_set 函数转换是否成功的标志，  真 = 转换ok
+
+[15] 广播数据解析规则函数
+     A : 在 ble_app.c 中的 main_loop_process(void)函数中添加
+
+[16] 此程序采用的是蓝牙主机，被动扫描模式
+
+[17] 蓝牙参数设置如下 (在blez_app.c 中的，ble_gap_scan_params_t 中设置)
+     A : BLE 主机，被动扫描
+     B : 蓝牙广播扫描间隔 = 160* 0.625 ms = 100ms
+	 C : 扫描窗口        =  80*0.625      = 50ms
+	 D : 扫描超时                         = 0  不超时
+	 E : 接收除了不是发给本机的定向广播之外的所有广播数据
+	 
+[18] keil mdk 中设置的全局变量有
+     NRFX_UARTE_ENABLED=1,NRFX_UARTE0_ENABLED=1,NRF52832_XXAA,CONFIG_GPIO_AS_PINRESET,NRF52,NRF_SD_BLE_API_VERSION=6,SOFTDEVICE_PRESENT,S132,SWI_DISABLE0,__STACK_SIZE=8192,__HEAP_SIZE=8192
+	
+
+[19] 解析获取到数据后，会通过串口发送输出，串口波特率 115200  8N1
+
+[20]  数据解析【A】逻辑举例 ：  原始数据 = 0406DC5475A87ACC05072302510000029800303838
+                                     04 06       DC5475A87ACC            0507        23025100000298         00303838
+                                                 [DECRYPT_MAC]                       [DECRYPT_SN]
+                                     04 = 唯一码为mac                    05 = sn
+									 06 = 后面6个字节数据表示mac         07 = 后面7个字节表示sn
+									 
+									 
+[21]  数据解析【B】逻辑举例 ：			
+
+
+
+
+
+[22]  数据解析【C】逻辑举例 ：			
+
+
+	
+
+
+[23]  数据解析【D】逻辑举例 ：	
+
+
+
+【0】 版本更新
+V106: 添加7 ---> [ decoding_setting\r\n             ] --- < set decoding mode          >\r\n");  // 解析方式， 默认xor解析数据 ，发送后明文解析数据
+
+V107: 
+				if(decoding_set_global_flag == true)
+                {
+                    print("[ plaintext_set_ok ]\r\n");  // 明文解析数据
+                }
+                else
+                {
+                    print("[ cipnertext_set_ok ]\r\n");  // 异或解密数据
+                }
+				设置不同的解密方式，nrf52832的回复方式不同，回复方式中明确了解密的方式
+				plaintest = 明文解析
+				cipnertexst = 密文解析 （xor 异或解析）
+
+	 

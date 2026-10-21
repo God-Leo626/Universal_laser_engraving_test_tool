@@ -1,0 +1,3 @@
+PASS data: exact-capacity, null, zero, invalid hex, no partial writes, signed bounds, equal fields
+PASS flash: select isolation, page/sector boundaries, unchanged neighboring bytes, range rejection, zero length, WEL failure, busy timeout, SPI fault
+Host simulation only: verify SPI timing, erase/program limits and power-loss behavior on hardware.

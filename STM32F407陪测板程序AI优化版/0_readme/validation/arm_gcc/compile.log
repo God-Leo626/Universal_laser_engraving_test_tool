@@ -1,0 +1,83 @@
+Cortex-M4 C object compilation only. NOT a Keil build or flashable firmware.
+GCC ARM_CM4F portmacro.h is used only for this check; production keeps RVDS/ARMCC.
+arm-none-eabi-gcc.exe (GNU Tools for STM32 10.3-2021.10.20211105-1100) 10.3.1 20210824 (release)
+Date: 2026-09-10 15:00:43
+COMPILE .\main.c
+COMPILE .\stm32f4xx_it.c
+COMPILE .\system_stm32f4xx.c
+COMPILE ..\3_stm32f407_fwlib\src\misc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_adc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_crc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_cryp.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_cryp_aes.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_cryp_des.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_cryp_tdes.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_dac.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_dbgmcu.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_dcmi.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_dma.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_dma2d.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_exti.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_flash.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_flash_ramfunc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_fsmc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_gpio.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_hash.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_hash_md5.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_hash_sha1.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_i2c.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_ltdc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_pwr.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_rcc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_rng.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_rtc.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_sai.c
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c: In function 'SAI_DeInit':
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c:182:30: warning: unused parameter 'SAIx' [-Wunused-parameter]
+  182 | void SAI_DeInit(SAI_TypeDef* SAIx)
+      |                 ~~~~~~~~~~~~~^~~~
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c: In function 'SAI_MonoModeConfig':
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c:461:66: warning: unused parameter 'SAI_Mono_StreoMode' [-Wunused-parameter]
+  461 | void SAI_MonoModeConfig(SAI_Block_TypeDef* SAI_Block_x, uint32_t SAI_Mono_StreoMode)
+      |                                                         ~~~~~~~~~^~~~~~~~~~~~~~~~~~
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c: In function 'SAI_TRIStateConfig':
+1_user/..\3_stm32f407_fwlib\src\stm32f4xx_sai.c:484:66: warning: unused parameter 'SAI_TRIState' [-Wunused-parameter]
+  484 | void SAI_TRIStateConfig(SAI_Block_TypeDef* SAI_Block_x, uint32_t SAI_TRIState)
+      |                                                         ~~~~~~~~~^~~~~~~~~~~~
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_sdio.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_spi.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_syscfg.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_tim.c
+COMPILE ..\3_stm32f407_fwlib\src\stm32f4xx_usart.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\croutine.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\event_groups.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\list.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\queue.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\tasks.c
+COMPILE ..\8_Free_RTOS\FreeRTOS_core\timers.c
+SKIP (ARMCC assembly): ..\8_Free_RTOS\Free_RTOS_portable\port.c
+COMPILE ..\8_Free_RTOS\Free_RTOS_portable\heap_4.c
+COMPILE ..\6_hardware\my_task.c
+COMPILE ..\6_hardware\data_processing.c
+COMPILE ..\6_hardware\usart_ring_buff.c
+COMPILE ..\6_hardware\usart_dma_all.c
+1_user/..\6_hardware\usart_dma_all.c:37: warning: ignoring '#pragma import ' [-Wunknown-pragmas]
+   37 |  #pragma import(__use_no_semihosting)
+      | 
+COMPILE ..\6_hardware\dma.c
+COMPILE ..\6_hardware\variable_global.c
+COMPILE ..\6_hardware\uart_select.c
+COMPILE ..\6_hardware\ui_lcd.c
+COMPILE ..\6_hardware\lcd.c
+COMPILE ..\6_hardware\font.c
+COMPILE ..\6_hardware\coolkit_logo_133x87.c
+COMPILE ..\6_hardware\button.c
+COMPILE ..\6_hardware\time3.c
+COMPILE ..\6_hardware\buzzer.c
+COMPILE ..\6_hardware\fixture_start.c
+COMPILE ..\6_hardware\systick_delay_freerots.c
+COMPILE ..\6_hardware\power_ctrl.c
+COMPILE ..\6_hardware\spi1.c
+COMPILE ..\6_hardware\spi2.c
+COMPILE ..\6_hardware\w25q32.c
+Compiled: 62; failed: 0; ARMCC port/startup/link: not checked.

@@ -1,0 +1,5 @@
+Host logic regression only; no physical peripherals are exercised.
+Date: 2026-09-10 15:00:40
+PASS: stream fragmentation/coalescing, feature lengths, malformed lines, 16-byte ID, packet bounds, ACK, 1000000-byte fuzz
+PASS: initialization bounds, FIFO/wrap, overflow, short reads, ISR handoff, PRIMASK restore
+PASS: Flash page/sector boundaries, retained data, chip isolation, failure recovery, bounded busy wait, data conversion bounds

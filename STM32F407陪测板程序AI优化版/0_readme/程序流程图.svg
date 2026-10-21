@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1550" viewBox="0 0 1120 1550" role="img" aria-labelledby="title desc">
+  <title id="title">STM32F407 陪测板程序流程图</title>
+  <desc id="desc">上电初始化，配置NRF52832，核验至少两条一致广播，上传产品信息，等待上位机确认，成功或超时后恢复接收。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#496079"/></marker>
+    <style>
+      text{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#18344d;font-size:21px;text-anchor:middle}
+      .title{font-size:32px;font-weight:700}.sub{font-size:17px;fill:#52687b}.label{font-size:18px}
+      .box{fill:#edf4fa;stroke:#6b8ba8;stroke-width:2}.diamond{fill:#fff7e6;stroke:#c99a40;stroke-width:2}
+      .line{fill:none;stroke:#496079;stroke-width:2.5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1120" height="1550" rx="16" fill="#fff"/>
+  <text x="560" y="54" class="title">STM32F407 陪测板 · 主运行流程</text>
+  <text x="560" y="86" class="sub">配置接收板 → 核验蓝牙产品信息 → 上传并等待上位机确认</text>
+
+  <rect x="390" y="115" width="340" height="56" rx="28" fill="#dcebf8" stroke="#6b8ba8" stroke-width="2"/>
+  <text x="560" y="151">上电 / 复位</text>
+  <path class="line" d="M560 171V197"/>
+  <rect class="box" x="330" y="198" width="460" height="78" rx="10"/>
+  <text x="560" y="230">初始化硬件与 LCD</text><text x="560" y="259" class="sub">读取 Flash 配置、NRF 版本，启动两个任务</text>
+  <path class="line" d="M560 276V302"/>
+  <rect class="box" x="330" y="303" width="460" height="78" rx="10"/>
+  <text x="560" y="335">配置 RSSI、特征值与唯一标识长度</text><text x="560" y="364" class="sub">PC 命令，或确认键读取已保存的设置</text>
+  <path class="line" d="M560 381V403"/>
+  <path class="diamond" d="M560 403L775 463L560 523L345 463Z"/>
+  <text x="560" y="458">配置有效且 NRF</text><text x="560" y="484">确认开始扫描？</text>
+  <path class="line" d="M345 463H205V342H330"/>
+  <text x="266" y="447" class="label">否 / 重新配置</text>
+  <path class="line" d="M560 523V557"/><text x="586" y="546" class="label">是</text>
+
+  <rect class="box" x="330" y="558" width="460" height="70" rx="10"/>
+  <text x="560" y="590">接收 NRF 完整广播行</text><text x="560" y="614" class="sub">唯一标识 / SN / 信道 / RSSI</text>
+  <path class="line" d="M560 628V653"/>
+  <path class="diamond" d="M560 653L790 723L560 793L330 723Z"/>
+  <text x="560" y="711">至少两条有效广播一致，</text><text x="560" y="739">本批无冲突或丢字节？</text>
+  <path class="line" d="M330 723H205V593H330"/>
+  <text x="257" y="704" class="label">否 / 继续接收</text>
+  <path class="line" d="M560 793V822"/><text x="586" y="814" class="label">是</text>
+  <rect x="330" y="823" width="460" height="86" rx="10" fill="#fff3bf" stroke="#c99a40" stroke-width="2"/>
+  <text x="560" y="853">暂停 USART2，锁定当前产品</text><text x="560" y="883">显示黄色、上传报文、开始 5 秒计时</text>
+  <path class="line" d="M560 909V936"/>
+
+  <path class="diamond" d="M560 937L745 994L560 1051L375 994Z"/>
+  <text x="560" y="988">收到正确的</text><text x="560" y="1015">上位机确认？</text>
+  <path class="line" d="M375 994H260V1240"/>
+  <text x="318" y="978" class="label">是</text>
+  <path class="line" d="M560 1051V1077"/><text x="586" y="1073" class="label">否</text>
+  <path class="diamond" d="M560 1078L730 1135L560 1192L390 1135Z"/>
+  <text x="560" y="1142">已达 5 秒超时？</text>
+  <path class="line" d="M730 1135H870"/>
+  <text x="806" y="1118" class="label">否</text>
+  <rect class="box" x="871" y="1095" width="215" height="80" rx="10"/>
+  <text x="978" y="1126" class="label">到 2 秒重发时点</text><text x="978" y="1154" class="label">则重发同一报文</text>
+  <path class="line" d="M978 1095V994H745"/>
+  <path class="line" d="M560 1192V1213H710V1240"/>
+  <text x="590" y="1210" class="label">是</text>
+
+  <rect x="130" y="1241" width="260" height="65" rx="10" fill="#e1f3e8" stroke="#599879" stroke-width="2"/>
+  <text x="260" y="1282">显示绿色：确认成功</text>
+  <rect x="580" y="1241" width="260" height="65" rx="10" fill="#fbe6e6" stroke="#bd6e6e" stroke-width="2"/>
+  <text x="710" y="1282">显示红色：等待超时</text>
+  <path class="line" d="M260 1306V1340H560V1360"/>
+  <path class="line" d="M710 1306V1340H560V1360"/>
+  <rect class="box" x="330" y="1361" width="460" height="72" rx="10"/>
+  <text x="560" y="1392">停止计时，清理本轮状态</text><text x="560" y="1420">恢复 USART2，接收下一件产品</text>
+  <path class="line" d="M790 1397H1100V593H790"/>
+  <text x="1003" y="1378" class="label">下一轮</text>
+  <text x="560" y="1490" class="sub">中断只搬运数据或记录事件；配置、Flash 和绘屏由业务任务执行。</text>
+  <text x="560" y="1520" class="sub">绿色表示上位机确认，不代表 STM32 已独立检验实际镭雕质量。</text>
+</svg>

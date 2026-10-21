@@ -1,0 +1,49 @@
+# ---- Keil / IAR / MDK 编译中间文件 ----
+*.o
+*.obj
+*.crf
+*.d
+*.axf
+*.htm
+*.map
+*.lst
+*.lnp
+*.plg
+*.dep
+*.i
+
+# ---- 编译输出目录 ----
+OUTPUT/
+Objects/
+Listings/
+Obj/
+**/OUTPUT/
+**/Objects/
+**/Listings/
+
+# ---- Keil 界面与调试临时文件 ----
+*.uvgui.*
+*.uvgui_*
+*.bak
+JLinkLog.txt
+JLinkSettings.ini
+*.scvd
+
+# ---- 第三方 SDK / 工具链压缩包与安装包 ----
+*.zip
+*.rar
+*.7z
+*.pack
+*.exe
+*.msi
+
+# ---- 版本控制元数据（本目录原本为 SVN 工作副本） ----
+.svn/
+**/.svn/
+.hg/
+**/.hg/
+
+# ---- 系统文件 ----
+Thumbs.db
+Desktop.ini
+.DS_Store
